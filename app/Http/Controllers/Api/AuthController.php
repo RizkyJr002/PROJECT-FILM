@@ -46,12 +46,10 @@ class AuthController extends Controller
             'level' => 'User'
         ]);
 
-        $token = $user->createToken('auth_token')->plainTextToken;
-
         return response()->json([
-            'data' => $user,
-            'access_token' => $token,
-            'token_type' => 'Bearer'
+            'message' => 'Registrasi Sukses',
+            'success' => true,
+            'data' => $user
         ]);
     }
 
@@ -59,19 +57,33 @@ class AuthController extends Controller
     {
         if (!Auth::attempt($request->only('email', 'password'))) {
             return response()->json([
-                'message' => 'Unauthorized'
+                'message' => 'Email atau Password Salah'
             ], 401);
         }
 
         $user = User::where('email', $request->email)->firstOrFail();
+        $level = User::where('level', '=', 'admin');
 
         $token = $user->createToken('auth_token')->plainTextToken;
 
-        return response()->json([
-            'message' => 'Login sukses',
-            'access_token' => $token,
-            'token_type' => 'Bearer',
-        ]);
+        switch ($user->level) {
+            case 'admin':
+                return response()->json([
+                    'message' => 'Anda login sebagai admin',
+                    'success' => true,
+                    'access_token' => $token,
+                    'token_type' => 'Bearer',
+                ]);
+                break;
+            
+            default:
+            return response()->json([
+                'message' => 'Anda login sebagai user',
+                'access_token' => $token,
+                'token_type' => 'Bearer',
+            ]);
+                break;
+        }
     }
 
     public function logout()
