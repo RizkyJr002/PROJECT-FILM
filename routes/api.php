@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\HistoriController;
 use App\Http\Controllers\Api\PembelianController;
+use App\Http\Controllers\Api\QRCodeController;
 use App\Http\Controllers\Api\TicketController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -29,22 +30,25 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [\App\Http\Controllers\Api\AuthController::class, 'logout']);
 });
 
+Route::middleware(['auth:sanctum', 'admin'])->group(function () {
+    Route::get('/tiket', [TicketController::class, 'index']);
+    Route::get('/tiket/{id}', [TicketController::class, 'show']);
+    Route::post('/tiket', [TicketController::class, 'store']);
+    Route::put('/tiket/{id}', [TicketController::class, 'update']);
+    Route::delete('/tiket/{id}', [TicketController::class, 'destroy']);
+
+    Route::get('/histori', [HistoriController::class, 'index']);
+    Route::get('/histori/{id}', [HistoriController::class, 'show']);
+    Route::post('/histori', [HistoriController::class, 'store']);
+    Route::delete('/histori/{id}', [HistoriController::class, 'destroy']);
+    Route::get('/histori/search/{id_transaksi}', [HistoriController::class, 'search']);
+});
+
+Route::middleware(['auth:sanctum', 'user'])->group(function () {
+    Route::get('/pembelian', [PembelianController::class, 'index']);
+    Route::get('/pembelian/{id}', [PembelianController::class, 'show']);
+    Route::post('/pembelian', [PembelianController::class, 'store']);
+});
+
 Route::get('/users', [AuthController::class, 'index']);
-
-// ADMIN
-Route::get('/tiket', [TicketController::class, 'index']);
-Route::get('/tiket/{id}', [TicketController::class, 'show']);
-Route::post('/tiket', [TicketController::class, 'store']);
-Route::put('/tiket/{id}', [TicketController::class, 'update']);
-Route::delete('/tiket/{id}', [TicketController::class, 'destroy']);
-
-// USER
-Route::get('/pembelian', [PembelianController::class, 'index']);
-Route::get('/pembelian/{id}', [PembelianController::class, 'show']);
-Route::post('/pembelian', [PembelianController::class, 'store']);
-
-Route::get('/histori', [HistoriController::class, 'index']);
-Route::get('/histori/{id}', [HistoriController::class, 'show']);
-Route::post('/histori', [HistoriController::class, 'store']);
-Route::delete('/histori/{id}', [HistoriController::class, 'destroy']);
-Route::get('/histori/search/{id_transaksi}', [HistoriController::class, 'search']);
+Route::get('/qrcode/{data}', [QRCodeController::class, 'generateQRCode']);

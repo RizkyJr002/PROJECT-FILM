@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
@@ -13,9 +14,11 @@ class AuthController extends Controller
 {
     public function index()
     {
-        $data = User::all();
+        $data = DB::table('users')
+                ->where('level','=','user')
+                ->get();
         return response()->json([
-            'message' => 'Berhasil menampilkan user dan admin',
+            'message' => 'Berhasil menampilkan user',
             'success' => true,
             'data' => $data
         ]);
@@ -29,21 +32,26 @@ class AuthController extends Controller
             'password' => 'required|string|min:8',
             'alamat' => 'required',
             'no_hp' => 'required|unique:users',
-            'jk' => 'required'
+            'jk' => 'required',
+            'gambar' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
         ]);
 
         if ($validator->fails()) {
             return response()->json($validator->errors());
         }
 
+        $gambar = $request->file('gambar');
+        $gambar->storeAs('public/posts', $gambar->hashName());
+
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
+            'gambar' => $gambar->hashName(),
             'password' => Hash::make($request->password),
             'alamat' => $request->alamat,
             'no_hp' => $request->no_hp,
             'jk' => $request->jk,
-            'level' => 'User'
+            'level' => 'user'
         ]);
 
         return response()->json([
