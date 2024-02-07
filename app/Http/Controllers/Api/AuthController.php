@@ -87,6 +87,7 @@ class AuthController extends Controller
             default:
             return response()->json([
                 'message' => 'Anda login sebagai user',
+                'success' => true,
                 'access_token' => $token,
                 'token_type' => 'Bearer',
             ]);

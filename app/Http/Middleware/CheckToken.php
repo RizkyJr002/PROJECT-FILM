@@ -5,7 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 
-class AdminMiddleware
+class CheckToken
 {
     /**
      * Handle an incoming request.
@@ -16,12 +16,12 @@ class AdminMiddleware
      */
     public function handle(Request $request, Closure $next)
     {
-        if (auth()->user()->level !== 'admin') {
-            return response()->json([
-                'message' => 'Anda bukan Admin'
-            ], 403);
+        // Periksa apakah token ada
+        if (!$request->hasHeader('Authorization')) {
+            return response()->json(['error' => 'Unauthorized'], 401);
         }
-        
+
+        // Lakukan pengecekan lebih lanjut jika diperlukan
         return $next($request);
     }
 }

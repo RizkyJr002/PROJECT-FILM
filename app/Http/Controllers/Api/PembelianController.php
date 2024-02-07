@@ -19,14 +19,25 @@ class PembelianController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function histori_pembelian($pengunjung)
     {
-        $data = Pembelian::all();
-        return response()->json([
-            'message' => 'Berhasil menampilkan semua pembelian tiket pengunjung',
-            'success' => true,
-            'data' => $data
-        ]);
+        $data = DB::table('pembelians')
+                    ->where('pengunjung', 'like', '%' . $pengunjung . '%')
+                    ->where('status','=','0')
+                    ->first();
+        
+        if ($data == null) {
+            return response()->json([
+                'message' => 'Maaf, nama pengunjung '. $pengunjung .' tidak melakukan pemesanan tiket',
+                'success' => false,
+            ]);
+        } else {
+            return response()->json([
+                'message' => 'Berhasil menampilkan pembelian tiket pengunjung '. $pengunjung,
+                'success' => true,
+                'data' => $data
+            ]);
+        }
     }
 
     /**

@@ -30,7 +30,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [\App\Http\Controllers\Api\AuthController::class, 'logout']);
 });
 
-Route::middleware(['auth:sanctum', 'admin'])->group(function () {
+Route::middleware(['checkToken'])->group(function () {
     Route::get('/tiket', [TicketController::class, 'index']);
     Route::get('/tiket/{id}', [TicketController::class, 'show']);
     Route::post('/tiket', [TicketController::class, 'store']);
@@ -42,13 +42,9 @@ Route::middleware(['auth:sanctum', 'admin'])->group(function () {
     Route::post('/histori', [HistoriController::class, 'store']);
     Route::delete('/histori/{id}', [HistoriController::class, 'destroy']);
     Route::get('/histori/search/{id_transaksi}', [HistoriController::class, 'search']);
-});
 
-Route::middleware(['auth:sanctum', 'user'])->group(function () {
-    Route::get('/pembelian', [PembelianController::class, 'index']);
-    Route::get('/pembelian/{id}', [PembelianController::class, 'show']);
+    Route::get('/pembelian/{pengunjung}', [PembelianController::class, 'histori_pembelian']);
     Route::post('/pembelian', [PembelianController::class, 'store']);
 });
 
 Route::get('/users', [AuthController::class, 'index']);
-Route::get('/qrcode/{data}', [QRCodeController::class, 'generateQRCode']);
