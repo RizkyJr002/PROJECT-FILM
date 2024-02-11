@@ -15,8 +15,8 @@ class AuthController extends Controller
     public function index()
     {
         $data = DB::table('users')
-                ->where('level','=','user')
-                ->get();
+            ->where('level', '=', 'user')
+            ->get();
         return response()->json([
             'message' => 'Berhasil menampilkan user',
             'success' => true,
@@ -70,9 +70,9 @@ class AuthController extends Controller
         }
 
         $user = User::where('email', $request->email)->firstOrFail();
-        $level = User::where('level', '=', 'admin');
 
         $token = $user->createToken('auth_token')->plainTextToken;
+        $user->update(['api_token' => $token]);
 
         switch ($user->level) {
             case 'admin':
@@ -83,20 +83,23 @@ class AuthController extends Controller
                     'token_type' => 'Bearer',
                 ]);
                 break;
-            
+
             default:
-            return response()->json([
-                'message' => 'Anda login sebagai user',
-                'success' => true,
-                'access_token' => $token,
-                'token_type' => 'Bearer',
-            ]);
+                return response()->json([
+                    'message' => 'Anda login sebagai user',
+                    'success' => true,
+                    'access_token' => $token,
+                    'token_type' => 'Bearer',
+                ]);
                 break;
         }
     }
 
     public function logout()
     {
+        $user = Auth::user();
+        $user->update(['api_token' => '']);
+        
         Auth::user()->tokens()->delete();
         return response()->json([
             'message' => 'logout sukses'

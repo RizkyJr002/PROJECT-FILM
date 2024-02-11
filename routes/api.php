@@ -3,8 +3,9 @@
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\HistoriController;
 use App\Http\Controllers\Api\PembelianController;
-use App\Http\Controllers\Api\QRCodeController;
 use App\Http\Controllers\Api\TicketController;
+use App\Http\Controllers\ForgotPasswordController;
+use App\Http\Controllers\ResetPasswordController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -22,6 +23,9 @@ use Illuminate\Support\Facades\Route;
 Route::post('/register', [\App\Http\Controllers\Api\AuthController::class, 'register']);
 Route::post('/login', [\App\Http\Controllers\Api\AuthController::class, 'login']);
 
+Route::post('/forgot-password', [ForgotPasswordController::class, 'sendResetLinkEmail']);
+Route::post('/reset-password/{token}', [ResetPasswordController::class, 'resetPassword']);
+
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
@@ -30,7 +34,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [\App\Http\Controllers\Api\AuthController::class, 'logout']);
 });
 
-Route::middleware(['checkToken'])->group(function () {
+Route::middleware(['verify.api.token'])->group(function () {
     Route::get('/tiket', [TicketController::class, 'index']);
     Route::get('/tiket/{id}', [TicketController::class, 'show']);
     Route::post('/tiket', [TicketController::class, 'store']);

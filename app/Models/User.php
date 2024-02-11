@@ -27,7 +27,8 @@ class User extends Authenticatable
         'no_hp',
         'jk',
         'level',
-        'gambar'
+        'gambar',
+        'api_token'
     ];
 
     /**
