@@ -22,16 +22,19 @@ class ForgotPasswordController extends Controller
 
         $email = $request->input('email');
         $token = Str::random(60);
+        $otp   = rand(100000, 999999);
 
         DB::table('password_resets')->insert([
             'email' => $email,
             'token' => $token,
+            'otp'   => $otp,
             'created_at' => now(),
         ]);
 
-        $resetLink = url("/password-reset/$token");
+        $resettoken = $token;
+        $resetotp = $otp;
 
-        Mail::send('emails.password_reset', ['resetLink' => $resetLink, 'email' => $email], function ($message) use ($email) {
+        Mail::send('emails.password_reset', ['resettoken' => $resettoken, 'resetotp' => $resetotp, 'email' => $email], function ($message) use ($email) {
             $message->to($email)->subject('Reset Password');
         });
 

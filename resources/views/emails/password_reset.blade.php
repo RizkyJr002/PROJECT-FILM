@@ -13,7 +13,12 @@
 
     <p>Kami menerima permintaan untuk mengatur ulang kata sandi Anda. Klik tautan di bawah untuk mengatur ulang :</p>
 
-    <a href="{{ $resetLink }}">{{ $resetLink }}</a>
+    <h3>
+        <b>Kode OTP : {{ $resetotp }}</b>
+    </h3>
+    <h3>
+        <b>Token : {{ $resettoken }}</b>
+    </h3>
 
     <p>Jika Anda tidak meminta pengaturan ulang kata sandi, Anda dapat mengabaikan email ini dengan aman.</p>
 
