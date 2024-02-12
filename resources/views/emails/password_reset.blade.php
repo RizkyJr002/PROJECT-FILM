@@ -16,9 +16,6 @@
     <h3>
         <b>Kode OTP : {{ $resetotp }}</b>
     </h3>
-    <h3>
-        <b>Token : {{ $resettoken }}</b>
-    </h3>
 
     <p>Jika Anda tidak meminta pengaturan ulang kata sandi, Anda dapat mengabaikan email ini dengan aman.</p>
 
