@@ -28,60 +28,6 @@ class TicketController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function store(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'kategori' => 'required',
-            'harga' => 'required|numeric',
-            'jadwal' => 'required'
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'data' => [],
-                'message' => $validator->errors(),
-                'success' => false
-            ]);
-        }
-
-        $no_tiket = Str::random(15);
-
-        $post = Ticket::create([
-            'kategori' => $request->get('kategori'),
-            'harga' => $request->get('harga'),
-            'jadwal' => $request->get('jadwal'),
-            'no_tiket' => $no_tiket
-        ]);
-
-        return response()->json([
-            'message' => 'Berhasil menambahkan tiket',
-            'success' => true,
-            'data' => new TicketResource($post)
-        ]);
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Post  $post
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function show($id)
-    {
-        $data = Ticket::find($id);
-        return response()->json([
-            'message' => 'Berhasil menampilkan tiket sesuai id',
-            'success' => true,
-            'data' => $data
-        ]);
-    }
-
-    /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request

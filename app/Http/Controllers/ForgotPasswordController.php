@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
@@ -28,7 +30,6 @@ class ForgotPasswordController extends Controller
             'email' => $email,
             'token' => $token,
             'otp'   => $otp,
-            'created_at' => now(),
         ]);
 
         $resettoken = $token;
@@ -38,6 +39,6 @@ class ForgotPasswordController extends Controller
             $message->to($email)->subject('Reset Password');
         });
 
-        return response()->json(['message' => 'Password reset link sent successfully']);
+        return response()->json(['message' => 'Kode OTP berhasil dikirim ke email anda']);
     }
 }

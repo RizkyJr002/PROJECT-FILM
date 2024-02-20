@@ -16,7 +16,6 @@ class TicketResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'no_tiket' => $this->no_tiket,
             'kategori' => $this->kategori,
             'harga' => $this->harga,
             'jadwal' => $this->jadwal,

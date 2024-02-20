@@ -8,7 +8,7 @@
 </head>
 <body>
     <b>
-        <p>Hallo {{ $email }},</p>
+        <p>Email : {{ $email }}</p>
     </b>
 
     <p>Kami menerima permintaan untuk mengatur ulang kata sandi Anda. Klik tautan di bawah untuk mengatur ulang :</p>

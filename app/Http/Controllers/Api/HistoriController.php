@@ -20,7 +20,7 @@ class HistoriController extends Controller
     {
         $data = DB::table('historis')
             ->join('pembelians', 'historis.id_transaksi', '=', 'pembelians.id_transaksi')
-            ->select('historis.id_transaksi', 'pembelians.no_tiket', 'pembelians.pengunjung', 'pembelians.total', 'pembelians.hari_kunjungan')
+            ->select('historis.id_transaksi', 'pembelians.no_tiket', 'pembelians.total', 'pembelians.hari_kunjungan')
             ->get();
 
         return response()->json([

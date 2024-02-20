@@ -1,8 +1,11 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\CartController;
 use App\Http\Controllers\Api\HistoriController;
+use App\Http\Controllers\Api\PembayaranController;
 use App\Http\Controllers\Api\PembelianController;
+use App\Http\Controllers\Api\QrCodeController;
 use App\Http\Controllers\Api\TicketController;
 use App\Http\Controllers\ForgotPasswordController;
 use App\Http\Controllers\ResetPasswordController;
@@ -35,9 +38,8 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 
 Route::middleware(['verify.api.token'])->group(function () {
+    //Admin
     Route::get('/tiket', [TicketController::class, 'index']);
-    Route::get('/tiket/{id}', [TicketController::class, 'show']);
-    Route::post('/tiket', [TicketController::class, 'store']);
     Route::put('/tiket/{id}', [TicketController::class, 'update']);
     Route::delete('/tiket/{id}', [TicketController::class, 'destroy']);
 
@@ -47,8 +49,15 @@ Route::middleware(['verify.api.token'])->group(function () {
     Route::delete('/histori/{id}', [HistoriController::class, 'destroy']);
     Route::get('/histori/search/{id_transaksi}', [HistoriController::class, 'search']);
 
+    //USER
+    Route::post('/cart', [CartController::class, 'store']);
+    Route::delete('/cart/{id_cart}', [CartController::class, 'destroy']);
+    Route::post('/cart/checkout', [CartController::class, 'checkout']);
+
+    Route::post('/bayar', [PembayaranController::class, 'bayar']);
+
     Route::get('/pembelian/{pengunjung}', [PembelianController::class, 'histori_pembelian']);
-    Route::post('/pembelian', [PembelianController::class, 'store']);
 });
 
-Route::get('/users', [AuthController::class, 'index']);
+Route::get('/generate-qrcode/{data}', [QrCodeController::class, 'generateQrCode'])->name('api.generate-qrcode');;
+Route::get('/show-qrcode/{data}', [QrCodeController::class, 'showQrCode']);

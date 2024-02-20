@@ -6,24 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
-    public function index()
-    {
-        $data = DB::table('users')
-            ->where('level', '=', 'user')
-            ->get();
-        return response()->json([
-            'message' => 'Berhasil menampilkan user',
-            'success' => true,
-            'data' => $data
-        ]);
-    }
-
     public function register(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -46,12 +33,13 @@ class AuthController extends Controller
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'gambar' => $gambar->hashName(),
+            'gambar' => $gambar,
             'password' => Hash::make($request->password),
             'alamat' => $request->alamat,
             'no_hp' => $request->no_hp,
             'jk' => $request->jk,
-            'level' => 'user'
+            'level' => 'user',
+            'api_token' => ''
         ]);
 
         return response()->json([
@@ -99,7 +87,7 @@ class AuthController extends Controller
     {
         $user = Auth::user();
         $user->update(['api_token' => '']);
-        
+
         Auth::user()->tokens()->delete();
         return response()->json([
             'message' => 'logout sukses'
